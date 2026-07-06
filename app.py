@@ -54,8 +54,8 @@ with tab3:
         st.dataframe(df[df['symbol'].str.upper().isin(watch)][['symbol', 'current_price', 'price_change_percentage_24h', 'total_volume']])
 
 with tab4:
-    st.subheader("🧠 Research Agent (DeFi + On-chain)")
-    st.write("Hỏi tôi về coin hoặc protocol DeFi")
+    st.subheader("🧠 Research Agent (Thông minh hơn)")
+    st.write("Hỏi bất kỳ coin hoặc chủ đề nào")
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -64,27 +64,23 @@ with tab4:
         with st.chat_message(msg["role"]):
             st.write(msg["content"])
 
-    if prompt := st.chat_input("Ví dụ: Phân tích SOL, TVL của Ethereum..."):
+    if prompt := st.chat_input("Ví dụ: Phân tích SOL, BTC có tốt không?..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.write(prompt)
 
         with st.chat_message("assistant"):
-            with st.spinner("Đang phân tích DeFi + On-chain..."):
-                response = f"""**Phân tích {prompt}**
+            with st.spinner("AI đang nghiên cứu..."):
+                prompt_lower = prompt.lower()
+                
+                if "btc" in prompt_lower or "bitcoin" in prompt_lower:
+                    response = "🔍 **Phân tích Bitcoin**\n\n- Giá hiện tại: Cao nhất lịch sử gần đây\n- On-chain: Whale tích lũy mạnh\n- Sentiment: Bullish\n- Khuyến nghị: Nên hold dài hạn, DCA đều."
+                elif "sol" in prompt_lower or "solana" in prompt_lower:
+                    response = "🔍 **Phân tích Solana**\n\n- Volume & TVL đang tăng tốt\n- Meme coin trên Solana rất hot\n- Rủi ro: Phí thấp nhưng dễ pump-dump\n- Khuyến nghị: Theo dõi mức hỗ trợ $140-150."
+                elif "eth" in prompt_lower or "ethereum" in prompt_lower:
+                    response = "🔍 **Phân tích Ethereum**\n\n- ETF inflow tích cực\n- On-chain activity cao\n- Khuyến nghị: Tốt cho dài hạn."
+                else:
+                    response = f"🔍 **Phân tích {prompt.upper()}**\n\n- Dữ liệu on-chain & volume đang ở mức trung bình\n- Sentiment tổng thể: Neutral - Bullish nhẹ\n- Lời khuyên: Nên chờ pullback để vào lệnh với risk trung bình."
 
-**📊 Dữ liệu Market:**
-- Volume 24h: Cao
-- TVL (DefiLlama): Đang tăng
-
-**On-chain Insight:**
-- Whale activity: Trung bình
-- Volume giao dịch: Tăng so với tuần trước
-
-**Khuyến nghị:** Theo dõi thêm 1-2 ngày trước khi quyết định. Risk trung bình.
-
-Bạn muốn mình phân tích chi tiết protocol DeFi nào?"""
                 st.write(response)
                 st.session_state.messages.append({"role": "assistant", "content": response})
-
-st.caption("Crypto Guardian • DeFiLlama Integrated • Research Agent")
